@@ -20,4 +20,11 @@ export const routes: Routes = [
       return import('./cart/cart').then((m) => m.Cart);
     },
   },
+  {
+    path: 'products/:id',
+    pathMatch: 'full',
+    loadComponent: () => {
+      return import('./product/product').then((m) => m.Product);
+    },
+  },
 ];
