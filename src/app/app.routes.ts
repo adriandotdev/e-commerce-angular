@@ -4,8 +4,13 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
+    redirectTo: 'products',
+  },
+  {
+    path: 'products',
+    pathMatch: 'full',
     loadComponent: () => {
-      return import('./home/home').then((m) => m.Home);
+      return import('./products/products').then((m) => m.Home);
     },
   },
   {
