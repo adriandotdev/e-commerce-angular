@@ -11,3 +11,9 @@ export interface Product {
     count: number;
   };
 }
+
+export interface ICart {
+  id: number;
+  userId: number;
+  products: Array<Product>;
+}
