@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { catchError, finalize } from 'rxjs';
 import { Product as ProductType } from '../../models/product';
+import { CartService } from '../services/cart';
 import { Products } from '../services/products';
 @Component({
   selector: 'app-product',
@@ -74,7 +75,7 @@ import { Products } from '../services/products';
             <span class="font-semibold">Quantity</span>
             <div class="flex items-center gap-3 mt-2 border border-gray-300">
               <button
-                (click)="decrement()"
+                (click)="decrementQuantity()"
                 class="w-8 border-r h-8 flex items-center justify-center border-gray-300 text-lg font-bold hover:bg-gray-100 disabled:opacity-40"
                 [disabled]="quantity() <= 1"
               >
@@ -82,7 +83,7 @@ import { Products } from '../services/products';
               </button>
               <span class="w-8 text-center font-semibold">{{ quantity() }}</span>
               <button
-                (click)="increment()"
+                (click)="incrementQuantity()"
                 class="w-8 h-8 border-l flex items-center justify-center border-gray-300 text-lg font-bold hover:bg-gray-100"
               >
                 +
@@ -92,6 +93,7 @@ import { Products } from '../services/products';
 
           <div class="mt-5 flex w-full gap-3 flex-col md:flex-row md:gap-5">
             <button
+              (click)="addToCart()"
               class="border-orange-300 border flex px-6 py-4 space-x-3 bg-orange-300/10 md:max-w-[180px] w-full justify-center cursor-pointer"
             >
               <svg
@@ -124,6 +126,7 @@ import { Products } from '../services/products';
 })
 export class Product implements OnInit {
   private productService = inject(Products);
+  private cartService = inject(CartService);
   private route = inject(ActivatedRoute);
 
   isFetching = signal<Boolean>(false);
@@ -150,11 +153,11 @@ export class Product implements OnInit {
       });
   }
 
-  increment() {
+  incrementQuantity() {
     this.quantity.update((q) => q + 1);
   }
 
-  decrement() {
+  decrementQuantity() {
     this.quantity.update((q) => Math.max(1, q - 1));
   }
 
@@ -163,5 +166,12 @@ export class Product implements OnInit {
       style: 'currency',
       currency: 'PHP',
     }).format(value);
+  }
+
+  addToCart() {
+    const product = this.product();
+    if (product !== null) {
+      this.cartService.addToProductCart(product, this.quantity());
+    }
   }
 }

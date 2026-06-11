@@ -1,0 +1,57 @@
+import { Component, input } from '@angular/core';
+import { Product as ProductType } from '../../../../models/product';
+@Component({
+  selector: 'app-cart-container',
+  imports: [],
+  template: ` @for (item of cartItems(); track item.product.id) {
+    <div
+      class="flex justify-between mt-5 items-center px-5 py-3 border bg-white border-gray-200/30 rounded-md mb-2"
+    >
+      <div class="flex items-center gap-6 max-w-[500px] flex-1">
+        <input type="checkbox" name="" id="" />
+        <img class="w-12" [src]="item.product.image" alt="" />
+        <span class="max-w-80">{{ item.product.title }}</span>
+      </div>
+
+      <div class="grid grid-cols-[1fr_1fr_1fr_1fr] items-center flex-1 gap-20">
+        <!-- Unit Price -->
+        <div class="text-center w-full">{{ formatPriceToPeso(item.product.price) }}</div>
+
+        <div class="flex items-center gap-3 border border-gray-300">
+          <button
+            class="w-8 border-r h-8 flex items-center justify-center border-gray-300 text-lg font-bold hover:bg-gray-100 disabled:opacity-40"
+            [disabled]="item.quantity <= 1"
+          >
+            −
+          </button>
+          <span class="w-8 text-center font-semibold">{{ item.quantity }}</span>
+          <button
+            class="w-8 h-8 border-l flex items-center justify-center border-gray-300 text-lg font-bold hover:bg-gray-100"
+          >
+            +
+          </button>
+        </div>
+
+        <!-- Total Price -->
+        <span class="text-center text-orange-600">
+          {{ formatPriceToPeso(item.product.price * item.quantity) }}
+        </span>
+        <div class="max-w-[170px] w-full text-center">
+          <button class="text-[14px]">Delete</button>
+        </div>
+      </div>
+    </div>
+  }`,
+  styles: ``,
+})
+export class CartContainer {
+  cartItems = input<{ product: ProductType; quantity: number }[]>();
+
+  formatPriceToPeso(value: number) {
+    return new Intl.NumberFormat('en-PH', {
+      style: 'currency',
+      currency: 'PHP',
+      maximumFractionDigits: 0,
+    }).format(value);
+  }
+}

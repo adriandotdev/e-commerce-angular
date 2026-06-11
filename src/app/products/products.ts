@@ -8,7 +8,7 @@ import { Products } from '../services/products';
   selector: 'app-home',
   imports: [RouterLink],
   template: `
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-7xl mx-auto mt-4">
       <input
         class="outline outline-slate-400 w-full rounded-md placeholder:text-slate-400 px-4 py-2 focus:ring-4 focus:ring-slate-400/50 transition-all duration-300"
         type="text"
