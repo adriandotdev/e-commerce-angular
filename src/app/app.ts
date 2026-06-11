@@ -7,7 +7,7 @@ import { Header } from './components/header/header';
   imports: [RouterOutlet, Header],
   template: `
     <app-header />
-    <main class="p-4">
+    <main>
       <router-outlet />
     </main>
   `,
