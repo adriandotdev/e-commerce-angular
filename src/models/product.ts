@@ -17,3 +17,6 @@ export interface ICart {
   userId: number;
   products: Array<Product>;
 }
+
+export type CartItemType = { product: Product; quantity: number };
+export type CartType = Record<number, { product: Product; quantity: number }>;

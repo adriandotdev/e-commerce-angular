@@ -1,14 +1,23 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, inject, Service, signal } from '@angular/core';
+import { computed, effect, inject, Service, signal, WritableSignal } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
-import { ICart, Product } from '../../models/product';
+import { CartItemType, ICart, Product } from '../../models/product';
 
 @Service()
 export class CartService {
   httpClient = inject(HttpClient);
 
-  cart = signal<Record<number, { product: Product; quantity: number }>>({});
+  cart: WritableSignal<Record<number, { product: Product; quantity: number }>> = signal<
+    Record<number, { product: Product; quantity: number }>
+  >(JSON.parse(localStorage.getItem('cart') ?? '{}'));
   computedCart = computed(() => Object.values(this.cart()));
+  toCheckOutItems: WritableSignal<Array<CartItemType>> = signal([]);
+
+  constructor() {
+    effect(() => {
+      localStorage.setItem('cart', JSON.stringify(this.cart()));
+    });
+  }
 
   addToCart(userId: number, products: Array<Pick<Product, 'id'>>): Observable<ICart> {
     const url = 'https://fakestoreapi.com/carts';

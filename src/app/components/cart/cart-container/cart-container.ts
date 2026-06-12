@@ -1,5 +1,6 @@
-import { Component, input } from '@angular/core';
-import { Product as ProductType } from '../../../../models/product';
+import { Component, inject, input, OnDestroy } from '@angular/core';
+import { CartItemType, CartType, Product as ProductType } from '../../../../models/product';
+import { CartService } from '../../../services/cart';
 @Component({
   selector: 'app-cart-container',
   imports: [],
@@ -8,7 +9,7 @@ import { Product as ProductType } from '../../../../models/product';
       class="flex justify-between mt-5 items-center px-5 py-3 border bg-white border-gray-200/30 rounded-md mb-2"
     >
       <div class="flex items-center gap-6 max-w-[500px] flex-1">
-        <input type="checkbox" name="" id="" />
+        <input (change)="checkBoxChange(item.product.id, item)" type="checkbox" name="" id="" />
         <img class="w-12" [src]="item.product.image" alt="" />
         <span class="max-w-80">{{ item.product.title }}</span>
       </div>
@@ -19,6 +20,7 @@ import { Product as ProductType } from '../../../../models/product';
 
         <div class="flex items-center gap-3 border border-gray-300">
           <button
+            (click)="decreaseQuantity(item.product.id)"
             class="w-8 border-r h-8 flex items-center justify-center border-gray-300 text-lg font-bold hover:bg-gray-100 disabled:opacity-40"
             [disabled]="item.quantity <= 1"
           >
@@ -26,6 +28,7 @@ import { Product as ProductType } from '../../../../models/product';
           </button>
           <span class="w-8 text-center font-semibold">{{ item.quantity }}</span>
           <button
+            (click)="increaseQuantity(item.product.id)"
             class="w-8 h-8 border-l flex items-center justify-center border-gray-300 text-lg font-bold hover:bg-gray-100"
           >
             +
@@ -36,16 +39,27 @@ import { Product as ProductType } from '../../../../models/product';
         <span class="text-center text-orange-600">
           {{ formatPriceToPeso(item.product.price * item.quantity) }}
         </span>
-        <div class="max-w-[170px] w-full text-center">
-          <button class="text-[14px]">Delete</button>
+        <div class="max-w-42.5 w-full text-center">
+          <button
+            class="text-[14px] cursor-pointer"
+            (click)="removeProductFromCart(item.product.id)"
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>
   }`,
   styles: ``,
 })
-export class CartContainer {
+export class CartContainer implements OnDestroy {
+  ngOnDestroy(): void {
+    this.cartService.toCheckOutItems.set([]);
+  }
+
+  cartService = inject(CartService);
   cartItems = input<{ product: ProductType; quantity: number }[]>();
+  cartProducts = this.cartService.computedCart;
 
   formatPriceToPeso(value: number) {
     return new Intl.NumberFormat('en-PH', {
@@ -53,5 +67,85 @@ export class CartContainer {
       currency: 'PHP',
       maximumFractionDigits: 0,
     }).format(value);
+  }
+
+  increaseQuantity(productId: number) {
+    const productToUpdate = this.cartService.cart()[productId];
+
+    productToUpdate.quantity = productToUpdate.quantity + 1;
+
+    const updatedCart: CartType = Object.fromEntries(
+      Object.entries(this.cartService.cart()).filter(([key]) => +key !== productId),
+    );
+
+    updatedCart[productToUpdate.product.id] = productToUpdate;
+
+    this.cartService.cart.set(updatedCart);
+
+    const product = this.cartService
+      .toCheckOutItems()
+      .find((cartItem) => cartItem.product.id === productId);
+
+    if (product) {
+      product.quantity = product.quantity + 1;
+      const newCheckoutItems = this.cartService
+        .toCheckOutItems()
+        .filter((cartItem) => cartItem.product.id !== productId);
+
+      this.cartService.toCheckOutItems.set([...newCheckoutItems, product]);
+    }
+  }
+
+  decreaseQuantity(productId: number) {
+    const productToUpdate = this.cartService.cart()[productId];
+
+    productToUpdate.quantity = productToUpdate.quantity - 1;
+
+    const updatedCart: CartType = Object.fromEntries(
+      Object.entries(this.cartService.cart()).filter(([key]) => +key !== productId),
+    );
+
+    updatedCart[productToUpdate.product.id] = productToUpdate;
+
+    this.cartService.cart.set(updatedCart);
+
+    const product = this.cartService
+      .toCheckOutItems()
+      .find((cartItem) => cartItem.product.id === productId);
+
+    if (product) {
+      product.quantity = product.quantity - 1;
+
+      const newCheckoutItems = this.cartService
+        .toCheckOutItems()
+        .filter((cartItem) => cartItem.product.id !== productId);
+
+      this.cartService.toCheckOutItems.set([...newCheckoutItems, product]);
+    }
+  }
+
+  removeProductFromCart(productId: number) {
+    const newCart: CartType = Object.fromEntries(
+      Object.entries(this.cartService.cart()).filter(([key]) => +key !== productId),
+    );
+
+    this.cartService.cart.set(newCart);
+  }
+
+  checkBoxChange(productId: number, cartItem: CartItemType) {
+    const product = this.cartService
+      .toCheckOutItems()
+      .find((cartItem) => cartItem.product.id === productId);
+
+    if (product) {
+      const newCheckoutItems = this.cartService
+        .toCheckOutItems()
+        .filter((cartItem) => cartItem.product.id !== productId);
+      this.cartService.toCheckOutItems.set(newCheckoutItems);
+    } else {
+      const cartItemCopy = { ...cartItem };
+      const newCheckoutItems = [...this.cartService.toCheckOutItems(), cartItemCopy];
+      this.cartService.toCheckOutItems.set(newCheckoutItems);
+    }
   }
 }
