@@ -6,7 +6,7 @@ import { CartService } from '../../../services/cart';
   imports: [],
   template: ` @for (item of cartItems(); track item.product.id) {
     <div
-      class="flex justify-between mt-5 items-center px-5 py-3 border bg-white border-gray-200/30 rounded-md mb-2"
+      class="max-w-6xl  mx-auto flex justify-between mt-5 items-center px-5 py-3 border bg-white border-gray-200/30 rounded-md mb-2"
     >
       <div class="flex items-center gap-6 max-w-[500px] flex-1">
         <input (change)="checkBoxChange(item.product.id, item)" type="checkbox" name="" id="" />

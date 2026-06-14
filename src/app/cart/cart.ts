@@ -14,7 +14,7 @@ import { CartService } from '../services/cart';
         <app-cart-container [cartItems]="cartItems()" />
 
         <footer
-          class="min-h-50 mt-3 sticky bottom-0 flex justify-between items-end border-t border-white bg-white p-5"
+          class="max-w-6xl mx-auto min-h-50 mt-3 sticky bottom-0 flex justify-between items-end border-t border-white bg-white p-5"
         >
           <div class="space-x-6">
             <input type="checkbox" name="" id="" />

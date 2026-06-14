@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-cart-header',
   imports: [],
   template: `
-    <div class="flex justify-between px-5 bg-white items-center py-3">
+    <div class="flex justify-between px-5 bg-white items-center py-3 max-w-6xl mx-auto">
       <div class="flex items-center gap-6  max-w-[500px] flex-1">
         <input type="checkbox" name="" id="" />
         <span class="font-semibold text-sm">Product</span>
