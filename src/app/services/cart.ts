@@ -11,6 +11,7 @@ export class CartService {
     Record<number, { product: Product; quantity: number }>
   >(JSON.parse(localStorage.getItem('cart') ?? '{}'));
   computedCart = computed(() => Object.values(this.cart()));
+  cartCount = computed(() => Object.values(this.cart()).length);
   toCheckOutItems: WritableSignal<Array<CartItemType>> = signal([]);
 
   constructor() {

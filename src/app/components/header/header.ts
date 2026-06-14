@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CartService } from '../../services/cart';
 
 @Component({
   selector: 'app-header',
@@ -10,7 +11,7 @@ import { RouterLink } from '@angular/router';
         <li routerLink="/products" class="font-medium text-3xl text-orange-600 cursor-pointer">
           Shopping
         </li>
-        <li routerLink="/cart" class="font-semibold cursor-pointer">
+        <li routerLink="/cart" class="font-semibold cursor-pointer relative">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -25,10 +26,18 @@ import { RouterLink } from '@angular/router';
               d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
             />
           </svg>
+          <div
+            class="absolute -top-2 -right-3 inline-flex min-w-5 h-5 items-center justify-center rounded-full bg-orange-600 px-1 text-white shadow-sm ring-2 ring-white"
+          >
+            <span class="text-[11px] font-semibold leading-none">{{ itemCount() }}</span>
+          </div>
         </li>
       </ul>
     </nav>
   </header>`,
   styles: ``,
 })
-export class Header {}
+export class Header {
+  cartService = inject(CartService);
+  itemCount = this.cartService.cartCount;
+}
