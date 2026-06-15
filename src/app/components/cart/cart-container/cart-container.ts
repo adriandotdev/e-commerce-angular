@@ -6,10 +6,14 @@ import { CartService } from '../../../services/cart';
   imports: [],
   template: ` @for (item of cartItems(); track item.product.id) {
     <div
-      class="max-w-6xl  mx-auto flex justify-between mt-5 items-center px-5 py-3 border bg-white border-gray-200/30 rounded-md mb-2"
+      class="max-w-6xl  mx-auto flex justify-between mt-5 items-center px-5 py-3 border bg-white border-gray-200/30 rounded-md mb-2 shadow-sm"
     >
       <div class="flex items-center gap-6 max-w-[500px] flex-1">
-        <input (change)="checkBoxChange(item.product.id, item)" type="checkbox" name="" id="" />
+        <input
+          (change)="checkBoxChange(item.product.id, item)"
+          type="checkbox"
+          class="h-5 w-5 cursor-pointer rounded border-slate-300 accent-orange-600 focus:ring-2 focus:ring-orange-200 focus:ring-offset-1"
+        />
         <img class="w-12" [src]="item.product.image" alt="" />
         <span class="max-w-80">{{ item.product.title }}</span>
       </div>
