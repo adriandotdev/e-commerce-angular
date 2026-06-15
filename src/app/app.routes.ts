@@ -5,6 +5,7 @@ import { Home } from './products/products';
 import { Signin } from './signin/signin';
 
 export const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: 'signin' },
   { path: 'signin', component: Signin }, // no header
 
   {
