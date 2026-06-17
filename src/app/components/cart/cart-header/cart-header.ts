@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CartService } from '../../../services/cart';
 
 @Component({
   selector: 'app-cart-header',
   imports: [],
   template: `
     <div class="flex justify-between px-5 bg-white items-center py-3 max-w-6xl mx-auto">
-      <div class="flex items-center gap-6  max-w-[500px] flex-1">
+      <div class="flex items-center gap-6  max-w-125 flex-1">
         <input
+          #selectAllCheckbox
+          (change)="this.cartService.handleSelectAllCheckboxEvent(selectAllCheckbox.checked)"
+          [checked]="this.cartService.isCartEqual() && this.cartService.cartCount() !== 0"
           type="checkbox"
           class="h-5 w-5 cursor-pointer rounded border-slate-300 accent-orange-600 focus:ring-2 focus:ring-orange-200 focus:ring-offset-1"
         />
@@ -22,4 +26,6 @@ import { Component } from '@angular/core';
   `,
   styles: ``,
 })
-export class CartHeader {}
+export class CartHeader {
+  cartService = inject(CartService);
+}

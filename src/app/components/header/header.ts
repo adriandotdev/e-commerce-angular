@@ -7,7 +7,7 @@ import { CartService } from '../../services/cart';
   imports: [RouterLink],
   template: `<header>
     <nav class="p-4 bg-white">
-      <ul class="flex items-center gap-4 font-sans max-w-6xl mx-auto">
+      <ul class="flex justify-between items-center gap-4 font-sans max-w-6xl mx-auto">
         <li routerLink="/products" class="font-medium text-3xl text-orange-600 cursor-pointer">
           Shopping
         </li>

@@ -10,7 +10,9 @@ import { CartService } from '../../../services/cart';
     >
       <div class="flex items-center gap-6 max-w-[500px] flex-1">
         <input
-          (change)="checkBoxChange(item.product.id, item)"
+          #itemCheckbox
+          [checked]="isItemChecked(item.product.id)"
+          (change)="checkBoxChange(item.product.id, item, itemCheckbox.checked)"
           type="checkbox"
           class="h-5 w-5 cursor-pointer rounded border-slate-300 accent-orange-600 focus:ring-2 focus:ring-orange-200 focus:ring-offset-1"
         />
@@ -65,6 +67,10 @@ export class CartContainer implements OnDestroy {
   cartItems = input<{ product: ProductType; quantity: number }[]>();
   cartProducts = this.cartService.computedCart;
 
+  isItemChecked(productId: number) {
+    return this.cartService.toCheckOutItems().some((item) => item.product.id === productId);
+  }
+
   formatPriceToPeso(value: number) {
     return new Intl.NumberFormat('en-PH', {
       style: 'currency',
@@ -74,12 +80,14 @@ export class CartContainer implements OnDestroy {
   }
 
   increaseQuantity(productId: number) {
-    const productToUpdate = this.cartService.cart()[productId];
+    const productToUpdate = { ...this.cartService.cart()[productId] };
 
     productToUpdate.quantity = productToUpdate.quantity + 1;
 
-    const updatedCart: CartType = Object.fromEntries(
-      Object.entries(this.cartService.cart()).filter(([key]) => +key !== productId),
+    const updatedCart: CartType = structuredClone(
+      Object.fromEntries(
+        Object.entries(this.cartService.cart()).filter(([key]) => +key !== productId),
+      ),
     );
 
     updatedCart[productToUpdate.product.id] = productToUpdate;
@@ -101,12 +109,14 @@ export class CartContainer implements OnDestroy {
   }
 
   decreaseQuantity(productId: number) {
-    const productToUpdate = this.cartService.cart()[productId];
+    const productToUpdate = { ...this.cartService.cart()[productId] };
 
     productToUpdate.quantity = productToUpdate.quantity - 1;
 
-    const updatedCart: CartType = Object.fromEntries(
-      Object.entries(this.cartService.cart()).filter(([key]) => +key !== productId),
+    const updatedCart: CartType = structuredClone(
+      Object.fromEntries(
+        Object.entries(this.cartService.cart()).filter(([key]) => +key !== productId),
+      ),
     );
 
     updatedCart[productToUpdate.product.id] = productToUpdate;
@@ -129,27 +139,57 @@ export class CartContainer implements OnDestroy {
   }
 
   removeProductFromCart(productId: number) {
-    const newCart: CartType = Object.fromEntries(
-      Object.entries(this.cartService.cart()).filter(([key]) => +key !== productId),
+    const newCart: CartType = structuredClone(
+      Object.fromEntries(
+        Object.entries(this.cartService.cart()).filter(([key]) => +key !== productId),
+      ),
     );
 
+    const newToCheckoutItems = this.cartService
+      .toCheckOutItems()
+      .filter((product) => product.product.id !== productId);
+
     this.cartService.cart.set(newCart);
+    this.cartService.toCheckOutItems.set(newToCheckoutItems);
   }
 
-  checkBoxChange(productId: number, cartItem: CartItemType) {
-    const product = this.cartService
-      .toCheckOutItems()
-      .find((cartItem) => cartItem.product.id === productId);
+  removeSelectedProductsFromCart() {
+    const newCart: CartType = structuredClone(
+      Object.fromEntries(
+        Object.entries(this.cartService.cart()).filter(([key]) =>
+          this.cartService.toBeDeleted().some((num) => num !== +key),
+        ),
+      ),
+    );
 
-    if (product) {
+    const newToCheckoutItems = this.cartService
+      .toCheckOutItems()
+      .filter((product) =>
+        this.cartService.toBeDeleted().some((num) => num !== product.product.id),
+      );
+
+    this.cartService.cart.set(newCart);
+    this.cartService.toCheckOutItems.set(newToCheckoutItems);
+
+    this.cartService.toBeDeleted.set([]);
+  }
+
+  checkBoxChange(productId: number, cartItem: CartItemType, isChecked: boolean) {
+    if (!isChecked) {
       const newCheckoutItems = this.cartService
         .toCheckOutItems()
         .filter((cartItem) => cartItem.product.id !== productId);
       this.cartService.toCheckOutItems.set(newCheckoutItems);
+      this.cartService.toBeDeleted.update((prev) => [
+        ...prev.filter((num) => num !== cartItem.product.id),
+      ]);
     } else {
       const cartItemCopy = { ...cartItem };
       const newCheckoutItems = [...this.cartService.toCheckOutItems(), cartItemCopy];
       this.cartService.toCheckOutItems.set(newCheckoutItems);
+      this.cartService.toBeDeleted.update((prev) => [...prev, cartItemCopy.product.id]);
     }
+
+    this.cartService.isAllSelected.set(this.cartService.isCartEqual());
   }
 }
