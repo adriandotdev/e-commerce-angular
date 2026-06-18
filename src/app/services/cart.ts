@@ -21,7 +21,7 @@ export class CartService {
     ),
   );
   toBeDeleted = signal<Number[]>([]);
-
+  toOrderItems: WritableSignal<Array<CartItemType>> = signal([]);
   constructor() {
     effect(() => {
       localStorage.setItem('cart', JSON.stringify(this.cart()));

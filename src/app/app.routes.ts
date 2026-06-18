@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { Cart } from './cart/cart';
+import { Checkout } from './checkout/checkout';
 import { ProtectedLayout } from './layouts/protected-layout/protected-layout';
 import { Home } from './products/products';
 import { Signin } from './signin/signin';
@@ -14,6 +15,7 @@ export const routes: Routes = [
     children: [
       { path: 'products', component: Home },
       { path: 'cart', component: Cart },
+      { path: 'checkout', component: Checkout },
       {
         path: 'products/:id',
         pathMatch: 'full',

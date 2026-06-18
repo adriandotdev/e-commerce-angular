@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { CartService } from '../../services/cart';
 
 @Component({
@@ -8,9 +8,16 @@ import { CartService } from '../../services/cart';
   template: `<header>
     <nav class="p-4 bg-white">
       <ul class="flex justify-between items-center gap-4 font-sans max-w-6xl mx-auto">
-        <li routerLink="/products" class="font-medium text-3xl text-orange-600 cursor-pointer">
-          Shopping
-        </li>
+        @if (currentPath() === '/checkout') {
+          <li routerLink="/products" class="font-medium text-2xl text-orange-600 cursor-pointer">
+            Shopping | Checkout
+          </li>
+        } @else {
+          <li routerLink="/products" class="font-medium text-3xl text-orange-600 cursor-pointer">
+            Shopping
+          </li>
+        }
+
         <li routerLink="/cart" class="font-semibold cursor-pointer relative">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -40,4 +47,15 @@ import { CartService } from '../../services/cart';
 export class Header {
   cartService = inject(CartService);
   itemCount = this.cartService.cartCount;
+  currentPath = signal('');
+
+  constructor(private router: Router) {
+    // Initial path
+    this.currentPath.set(this.router.url);
+
+    // Update whenever route changes
+    this.router.events.subscribe(() => {
+      this.currentPath.set(this.router.url);
+    });
+  }
 }

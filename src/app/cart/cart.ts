@@ -1,4 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { CartType } from '../../models/product';
 import { CartContainer } from '../components/cart/cart-container/cart-container';
 import { CartHeader } from '../components/cart/cart-header/cart-header';
@@ -6,7 +7,7 @@ import { CartService } from '../services/cart';
 
 @Component({
   selector: 'app-cart',
-  imports: [CartHeader, CartContainer],
+  imports: [CartHeader, CartContainer, RouterLink],
   template: `
     <div class="bg-[#F5F5F5] min-h-dvh py-4">
       <div class="max-w-7xl mx-auto">
@@ -44,6 +45,8 @@ import { CartService } from '../services/cart';
               </p>
             </div>
             <button
+              (click)="checkout()"
+              routerLink="/checkout"
               class="bg-orange-600 text-white px-12 py-3 rounded-sm cursor-pointer hover:bg-orange-600/80 transition-colors duration-200"
             >
               Check Out
@@ -61,6 +64,9 @@ export class Cart {
   cartItems = this.cartService.computedCart;
   selectedItemCount = computed(() => this.cartService.toCheckOutItems().length);
 
+  checkout() {
+    this.cartService.toOrderItems.set([...this.cartService.toCheckOutItems()]);
+  }
   formatPriceToPeso(value: number) {
     return new Intl.NumberFormat('en-PH', {
       style: 'currency',
