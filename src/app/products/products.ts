@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { NgmMotionDirective } from '@scripttype/ng-motion';
 import { catchError, finalize } from 'rxjs';
 import { Product } from '../../models/product';
 import { CartService } from '../services/cart';
@@ -7,26 +8,32 @@ import { Products } from '../services/products';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink],
+  imports: [RouterLink, NgmMotionDirective],
   template: `
     <div class="max-w-6xl mx-auto mt-4 my-20 px-4 md:p-0">
       <div class="relative">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          class="pointer-events-none absolute left-3.5 top-1/2 size-5 -translate-y-1/2 text-slate-400"
-          aria-hidden="true"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="m21 21-4.35-4.35m1.35-5.15a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z"
-          />
-        </svg>
+        <div ngmMotion [initial]="{ opacity: 0 }" [animate]="{ opacity: 1 }">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            class="pointer-events-none absolute left-3.5 top-1/2 size-5 -translate-y-1/2 text-slate-400"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m21 21-4.35-4.35m1.35-5.15a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z"
+            />
+          </svg>
+        </div>
+
         <input
+          ngmMotion
+          [initial]="{ opacity: 0 }"
+          [animate]="{ opacity: 1 }"
           class="w-full rounded-xl border border-orange-100 bg-white/95 py-3 pr-4 pl-11 text-slate-800 placeholder:text-slate-400 shadow-[0_10px_24px_rgba(15,23,42,0.08)] focus:border-orange-400 focus:outline-none focus:ring-4 focus:ring-orange-200/70 transition"
           type="text"
           name="search"
@@ -44,8 +51,14 @@ import { Products } from '../services/products';
         </div>
       } @else {
         <ul class="flex flex-wrap items-stretch gap-6 mt-5">
-          @for (item of products(); track item.id) {
-            <li class="flex-1 min-w-62.5 group relative">
+          @for (item of products(); track item.id; let i = $index) {
+            <li
+              ngmMotion
+              [initial]="{ opacity: 0, y: 50 }"
+              [animate]="{ opacity: 1, y: 0 }"
+              [transition]="{ type: 'spring', stiffness: 300, damping: 24, delay: i * 0.06 }"
+              class="flex-1 min-w-62.5 group relative"
+            >
               <a [routerLink]="['/products', item.id]" class="block h-full focus:outline-none">
                 <div
                   class="h-full rounded-xl border border-orange-100 bg-white/95 p-3 shadow-[0_10px_24px_rgba(15,23,42,0.08)] transition duration-200 group-hover:-translate-y-0.5 group-hover:shadow-[0_14px_30px_rgba(15,23,42,0.12)] group-hover:border-orange-300"

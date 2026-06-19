@@ -1,5 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { NgmMotionDirective } from '@scripttype/ng-motion';
 import { CartType } from '../../models/product';
 import { CartContainer } from '../components/cart/cart-container/cart-container';
 import { CartHeader } from '../components/cart/cart-header/cart-header';
@@ -7,11 +8,11 @@ import { CartService } from '../services/cart';
 
 @Component({
   selector: 'app-cart',
-  imports: [CartHeader, CartContainer, RouterLink],
+  imports: [CartHeader, CartContainer, RouterLink, NgmMotionDirective],
   template: `
     <div class="bg-[#F5F5F5] min-h-dvh py-4">
       <div class="max-w-7xl mx-auto">
-        <app-cart-header />
+        <app-cart-header ngmMotion [initial]="{ opacity: 0 }" [animate]="{ opacity: 1 }" />
 
         <app-cart-container [cartItems]="cartItems()" />
 

@@ -1,14 +1,21 @@
 import { Component, effect, inject, signal } from '@angular/core';
+import { NgmMotionDirective, TargetAndTransition, Transition } from '@scripttype/ng-motion';
 import { CartService } from '../services/cart';
 
 @Component({
   selector: 'app-checkout',
-  imports: [],
+  imports: [NgmMotionDirective],
   template: `
     <div class="bg-[#F5F5F5] min-h-dvh py-8">
       <div class="max-w-6xl mx-auto px-4 lg:px-0">
         <!-- Address Section -->
-        <div class="address-dashed-border bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div
+          ngmMotion
+          [initial]="checkoutContentInitial"
+          [animate]="checkoutContentAnimate"
+          [transition]="{ ...checkoutContentTransition, delay: 0 * 0.06 }"
+          class="address-dashed-border bg-white rounded-lg shadow-sm p-6 mb-6"
+        >
           <div class="flex items-center gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -30,7 +37,7 @@ import { CartService } from '../services/cart';
               />
             </svg>
 
-            <h2 class="text-lg text-orange-600">Delivery Address</h2>
+            <h2 class="text-lg text-orange-600">Delivery Details</h2>
           </div>
           <div class="flex justify-between flex-wrap mt-3 gap-3">
             <span>John Doe (+63) 931 234 4431</span>
@@ -39,7 +46,13 @@ import { CartService } from '../services/cart';
         </div>
 
         <!-- Products Ordered Section -->
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div
+          ngmMotion
+          [initial]="checkoutContentInitial"
+          [animate]="checkoutContentAnimate"
+          [transition]="{ ...checkoutContentTransition, delay: 1 * 0.06 }"
+          class="bg-white rounded-lg shadow-sm p-6 mb-6"
+        >
           <div class="space-y-4">
             <h2 class="text-xl font-md mb-4 text-gray-800 md:hidden">Order Summary</h2>
             <div
@@ -54,7 +67,7 @@ import { CartService } from '../services/cart';
                 <div class="w-full text-center font-semibold text-sm">Item Subtotal</div>
               </div>
             </div>
-            @for (item of cartService.toOrderItems(); track item.product.id) {
+            @for (item of cartService.toOrderItems(); track item.product.id; let i = $index) {
               <div
                 class="flex items-center justify-between border-b border-gray-200 pb-4 md:hidden"
               >
@@ -115,7 +128,13 @@ import { CartService } from '../services/cart';
         </div>
 
         <!-- Payment Methods Section -->
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div
+          ngmMotion
+          [initial]="checkoutContentInitial"
+          [animate]="checkoutContentAnimate"
+          [transition]="{ ...checkoutContentTransition, delay: 2 * 0.06 }"
+          class="bg-white rounded-lg shadow-sm p-6 mb-6"
+        >
           <h2 class="text-xl font-md mb-4 text-gray-800">Payment Method</h2>
           <div class="space-y-3">
             <label
@@ -161,7 +180,13 @@ import { CartService } from '../services/cart';
         </div>
 
         <!-- Total and Place Order Section -->
-        <div class="bg-white rounded-lg shadow-sm p-6">
+        <div
+          ngmMotion
+          [initial]="checkoutContentInitial"
+          [animate]="checkoutContentAnimate"
+          [transition]="{ ...checkoutContentTransition, delay: 3 * 0.06 }"
+          class="bg-white rounded-lg shadow-sm p-6"
+        >
           <div class="flex justify-between items-center mb-4">
             <span class="text-lg text-gray-700">Subtotal:</span>
             <span class="text-lg font-semibold text-gray-800">
@@ -215,6 +240,22 @@ import { CartService } from '../services/cart';
 export class Checkout {
   cartService = inject(CartService);
   selectedPaymentMethod = signal<string>('credit-card');
+
+  checkoutContentInitial: TargetAndTransition = {
+    opacity: 0,
+    y: 70,
+  };
+
+  checkoutContentAnimate: TargetAndTransition = {
+    opacity: 1,
+    y: 0,
+  };
+
+  checkoutContentTransition: Transition = {
+    duration: 0.3,
+    type: 'spring',
+    damping: 15,
+  };
 
   constructor() {
     effect(() => {

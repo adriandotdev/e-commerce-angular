@@ -1,12 +1,17 @@
 import { Component, inject, input, OnDestroy } from '@angular/core';
+import { NgmMotionDirective, TargetAndTransition, Transition } from '@scripttype/ng-motion';
 import { CartItemType, CartType, Product as ProductType } from '../../../../models/product';
 import { CartService } from '../../../services/cart';
 @Component({
   selector: 'app-cart-container',
-  imports: [],
-  template: ` @for (item of cartItems(); track item.product.id) {
+  imports: [NgmMotionDirective],
+  template: ` @for (item of cartItems(); track item.product.id; let i = $index) {
     <div
-      class="max-w-6xl  mx-auto flex justify-between mt-5 items-center px-5 py-3 border bg-white border-gray-200/30 rounded-md mb-2 shadow-sm"
+      ngmMotion
+      [initial]="productContentInitial"
+      [animate]="productContentAnimate"
+      [exit]="productContentExit"
+      class="max-w-6xl  mx-auto flex justify-between mt-5 items-center px-5 py-3 border bg-white border-gray-200/30 rounded-md  shadow-sm"
     >
       <div class="flex items-center gap-6 max-w-[500px] flex-1">
         <input
@@ -66,6 +71,39 @@ export class CartContainer implements OnDestroy {
   cartService = inject(CartService);
   cartItems = input<{ product: ProductType; quantity: number }[]>();
   cartProducts = this.cartService.computedCart;
+
+  productContentInitial: TargetAndTransition = {
+    opacity: 0,
+    y: 70,
+  };
+
+  productContentAnimate: TargetAndTransition = {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+      type: 'spring',
+      damping: 15,
+      delay: 0.06,
+    },
+  };
+
+  productContentTransition: Transition = {
+    duration: 0.3,
+    type: 'spring',
+    damping: 15,
+    delay: 0.06,
+  };
+
+  productContentExit: TargetAndTransition = {
+    opacity: 0,
+    x: 40,
+    scale: 0.95,
+    transition: {
+      duration: 0.25,
+      ease: 'easeOut',
+    },
+  };
 
   isItemChecked(productId: number) {
     return this.cartService.toCheckOutItems().some((item) => item.product.id === productId);

@@ -1,12 +1,14 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NgmMotionDirective } from '@scripttype/ng-motion';
+import type { TargetAndTransition, Transition } from 'motion-dom';
 import { catchError, finalize } from 'rxjs';
 import { Product as ProductType } from '../../models/product';
 import { CartService } from '../services/cart';
 import { Products } from '../services/products';
 @Component({
   selector: 'app-product',
-  imports: [],
+  imports: [NgmMotionDirective],
   template: `
     @if (isFetching()) {
       <div class="max-w-6xl mx-auto px-4 py-6">
@@ -29,7 +31,13 @@ import { Products } from '../services/products';
       <div class="max-w-6xl mx-auto py-6">
         <div class="w-full rounded-2xl border-orange-100 bg-white/95 p-5 sm:p-7">
           <div class="grid gap-6 md:grid-cols-[minmax(280px,380px)_1fr] items-start">
-            <div class="bg-slate-50 border border-slate-200 rounded-xl p-6">
+            <div
+              ngmMotion
+              [initial]="productImageInitial"
+              [animate]="productImageAnimate"
+              [transition]="productImageTransition"
+              class="bg-slate-50 border border-slate-200 rounded-xl p-6"
+            >
               <img
                 [src]="product()?.image"
                 class="w-full aspect-square object-contain"
@@ -39,22 +47,49 @@ import { Products } from '../services/products';
 
             <div class="space-y-5">
               <div class="space-y-3">
-                <p class="text-xs uppercase tracking-[0.18em] font-semibold text-orange-600">
+                <p
+                  ngmMotion
+                  [initial]="productContentInitial"
+                  [animate]="productContentAnimate"
+                  [transition]="{ ...productContentTransition, delay: 0 * 0.06 }"
+                  class="text-xs uppercase tracking-[0.18em] font-semibold text-orange-600"
+                >
                   Product
                 </p>
-                <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 text-left">
+                <h1
+                  ngmMotion
+                  [initial]="productContentInitial"
+                  [animate]="productContentAnimate"
+                  [transition]="{ ...productContentTransition, delay: 1 * 0.06 }"
+                  class="text-2xl sm:text-3xl font-bold text-slate-900 text-left"
+                >
                   {{ product()?.title }}
                 </h1>
 
                 <div class="flex flex-wrap items-center gap-3 text-sm text-slate-600">
-                  <span class="font-semibold text-slate-700"
+                  <span
+                    ngmMotion
+                    [initial]="productContentInitial"
+                    [animate]="productContentAnimate"
+                    [transition]="{ ...productContentTransition, delay: 2 * 0.06 }"
+                    class="font-semibold text-slate-700"
                     >{{ product()?.rating?.rate }} / 5</span
                   >
                   <span class="text-slate-400">|</span>
-                  <span>{{ product()?.rating?.count }} reviews</span>
+                  <span
+                    ngmMotion
+                    [initial]="productContentInitial"
+                    [animate]="productContentAnimate"
+                    [transition]="{ ...productContentTransition, delay: 3 * 0.06 }"
+                    >{{ product()?.rating?.count }} reviews</span
+                  >
                   <div class="flex text-amber-400">
                     @for (item of [1, 2, 3, 4, 5]; track $index) {
                       <svg
+                        ngmMotion
+                        [initial]="productContentInitial"
+                        [animate]="productContentAnimate"
+                        [transition]="{ ...productContentTransition, delay: $index * 0.06 }"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
                         viewBox="0 0 24 24"
@@ -70,13 +105,33 @@ import { Products } from '../services/products';
                 </div>
               </div>
 
-              <p class="text-slate-600 leading-relaxed">{{ product()?.description }}</p>
+              <p
+                ngmMotion
+                [initial]="productContentInitial"
+                [animate]="productContentAnimate"
+                [transition]="{ ...productContentTransition, delay: 4 * 0.06 }"
+                class="text-slate-600 leading-relaxed"
+              >
+                {{ product()?.description }}
+              </p>
 
-              <p class="text-3xl sm:text-4xl font-bold text-slate-900">
+              <p
+                ngmMotion
+                [initial]="productContentInitial"
+                [animate]="productContentAnimate"
+                [transition]="{ ...productContentTransition, delay: 5 * 0.06 }"
+                class="text-3xl sm:text-4xl font-bold text-slate-900"
+              >
                 {{ formatPriceToPeso(product()?.price ?? 0) }}
               </p>
 
-              <div class="flex items-center gap-4">
+              <div
+                ngmMotion
+                [initial]="productContentInitial"
+                [animate]="productContentAnimate"
+                [transition]="{ ...productContentTransition, delay: 6 * 0.06 }"
+                class="flex items-center gap-4"
+              >
                 <span class="font-semibold text-slate-800">Quantity</span>
                 <div class="flex items-center border border-slate-300 rounded-lg overflow-hidden">
                   <button
@@ -98,13 +153,21 @@ import { Products } from '../services/products';
 
               <div class="flex w-full gap-3 flex-col sm:flex-row sm:max-w-md">
                 <button
+                  ngmMotion
+                  [initial]="productContentInitial"
+                  [animate]="productContentAnimate"
+                  [transition]="{ ...productContentTransition, delay: 7 * 0.06 }"
                   (click)="addToCart()"
-                  class="border border-orange-300 px-5 py-3 bg-orange-300/10 text-orange-700 font-semibold rounded-lg w-full hover:bg-orange-300/20 transition"
+                  class="border border-orange-300 px-5 py-3 bg-orange-300/10 text-orange-700 font-semibold rounded-lg w-full hover:bg-orange-300/20 transition-colors"
                 >
                   Add to Cart
                 </button>
                 <button
-                  class="border border-orange-300 px-5 py-3 bg-orange-600 text-white font-semibold rounded-lg w-full hover:bg-orange-700 transition"
+                  ngmMotion
+                  [initial]="productContentInitial"
+                  [animate]="productContentAnimate"
+                  [transition]="{ ...productContentTransition, delay: 8 * 0.06 }"
+                  class="border border-orange-300 px-5 py-3 bg-orange-600 text-white font-semibold rounded-lg w-full hover:bg-orange-700 transition-colors"
                 >
                   Buy Now
                 </button>
@@ -126,6 +189,39 @@ export class Product implements OnInit {
   product = signal<ProductType | null>(null);
   quantity = signal(1);
   id = this.route.snapshot.paramMap.get('id');
+
+  productImageInitial: TargetAndTransition = {
+    opacity: 0,
+    scale: 0,
+  };
+
+  productImageAnimate: TargetAndTransition = {
+    opacity: 1,
+    scale: 1,
+  };
+
+  productImageTransition: Transition = {
+    duration: 0.3,
+    type: 'spring',
+    damping: 15,
+  };
+
+  productContentInitial: TargetAndTransition = {
+    opacity: 0,
+    y: 70,
+  };
+
+  productContentAnimate: TargetAndTransition = {
+    opacity: 1,
+    y: 0,
+  };
+
+  productContentTransition: Transition = {
+    duration: 0.3,
+    type: 'spring',
+    damping: 15,
+    delay: 0.06,
+  };
 
   ngOnInit(): void {
     this.isFetching.set(true);
