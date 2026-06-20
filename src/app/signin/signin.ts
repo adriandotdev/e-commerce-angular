@@ -1,12 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signin',
-  imports: [],
+  imports: [ReactiveFormsModule],
   template: `
     <div class="mx-auto max-w-7xl flex justify-center min-h-dvh items-center px-4 py-8">
       <form
-        action=""
+        [formGroup]="signinForm"
+        (ngSubmit)="signIn()"
         class="w-full max-w-107.5 rounded-2xl md:border border-orange-100 bg-white/95 p-6 sm:p-8 md:shadow-[0_16px_40px_rgba(15,23,42,0.08)] flex flex-col items-center gap-5"
       >
         <header class="w-full max-w-95 text-left">
@@ -22,6 +25,7 @@ import { Component } from '@angular/core';
         <section class="flex flex-col w-full max-w-95 gap-2">
           <label for="username" class="font-medium text-slate-800">Username</label>
           <input
+            formControlName="username"
             placeholder="Phone number / Username / Email"
             class="border border-slate-300 bg-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-600/35 focus:border-orange-500 transition"
             type="text"
@@ -39,6 +43,7 @@ import { Component } from '@angular/core';
             >
           </div>
           <input
+            formControlName="password"
             placeholder="Password"
             class="border border-slate-300 bg-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-600/35 focus:border-orange-500 transition"
             type="password"
@@ -64,4 +69,20 @@ import { Component } from '@angular/core';
   `,
   styles: ``,
 })
-export class Signin {}
+export class Signin {
+  router = inject(Router);
+  signinForm = new FormGroup({
+    username: new FormControl(''),
+    password: new FormControl(''),
+  });
+
+  signIn() {
+    if (
+      this.signinForm.value.username === 'username' &&
+      this.signinForm.value.password === 'password'
+    ) {
+      localStorage.setItem('auth', 'true');
+      this.router.navigate(['/products']);
+    }
+  }
+}

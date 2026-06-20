@@ -1,13 +1,15 @@
 import { Routes } from '@angular/router';
 import { Cart } from './cart/cart';
 import { Checkout } from './checkout/checkout';
+import { authGuard } from './guards/auth-guard';
+import { publicGuard } from './guards/public-guard';
 import { ProtectedLayout } from './layouts/protected-layout/protected-layout';
 import { Home } from './products/products';
 import { Signin } from './signin/signin';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'signin' },
-  { path: 'signin', component: Signin }, // no header
+  { path: 'signin', component: Signin, canActivate: [publicGuard] }, // no header
 
   {
     path: '',
@@ -24,5 +26,6 @@ export const routes: Routes = [
         },
       },
     ],
+    canActivate: [authGuard],
   },
 ];

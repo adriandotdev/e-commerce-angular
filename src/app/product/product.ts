@@ -5,6 +5,7 @@ import type { TargetAndTransition, Transition } from 'motion-dom';
 import { catchError, finalize } from 'rxjs';
 import { Product as ProductType } from '../../models/product';
 import { CartService } from '../services/cart';
+import { Modal } from '../services/modal';
 import { Products } from '../services/products';
 @Component({
   selector: 'app-product',
@@ -183,6 +184,8 @@ import { Products } from '../services/products';
 export class Product implements OnInit {
   private productService = inject(Products);
   private cartService = inject(CartService);
+  private modalService = inject(Modal);
+
   private route = inject(ActivatedRoute);
 
   isFetching = signal<Boolean>(false);
@@ -261,6 +264,7 @@ export class Product implements OnInit {
     const product = this.product();
     if (product !== null) {
       this.cartService.addToProductCart(product, this.quantity());
+      this.modalService.showAddToCartModal.set(true);
     }
   }
 }

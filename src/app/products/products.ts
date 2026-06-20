@@ -4,6 +4,7 @@ import { NgmMotionDirective } from '@scripttype/ng-motion';
 import { catchError, finalize } from 'rxjs';
 import { Product } from '../../models/product';
 import { CartService } from '../services/cart';
+import { Modal } from '../services/modal';
 import { Products } from '../services/products';
 
 @Component({
@@ -109,6 +110,8 @@ import { Products } from '../services/products';
 export class Home implements OnInit {
   productService = inject(Products);
   cartService = inject(CartService);
+  modalService = inject(Modal);
+
   products = signal<Array<Product>>([]);
   isProductLoading = signal<Boolean>(false);
 
@@ -140,5 +143,6 @@ export class Home implements OnInit {
 
   addToCart(product: Product) {
     this.cartService.addToProductCart(product, 1);
+    this.modalService.showAddToCartModal.set(true);
   }
 }
