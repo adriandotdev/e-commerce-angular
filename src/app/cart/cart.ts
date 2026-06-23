@@ -48,7 +48,8 @@ import { CartService } from '../services/cart';
             <button
               (click)="checkout()"
               routerLink="/checkout"
-              class="bg-orange-600 text-white px-12 py-3 rounded-sm cursor-pointer hover:bg-orange-600/80 transition-colors duration-200"
+              [disabled]="selectedItemCount() === 0"
+              class="bg-orange-600 text-white px-12 py-3 rounded-sm cursor-pointer hover:bg-orange-600/80 transition-colors duration-200 disabled:bg-orange-600/30"
             >
               Check Out
             </button>
