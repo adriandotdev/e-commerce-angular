@@ -1,59 +1,36 @@
-# AngularApp
+# E-Commerce Frontend Application using Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.0.
+## Description
+This is one of my projects to demonstrate my understanding in AngularJS. As a professional developer using ReactJS and NextJS in daily basis, learning how Angular works made me appreciate more the framework. It made me realize how the framework is so robust where in you have minimal third-party packages installation to cover your needed functionalities of most web apps like routing, handling state management, and data fetching. I also love the services and DI features of Angular that made easy to separate all your app service or requirements. Learning this is quite easy for me since I have knowledge in JavaScript itself, I'll continue to explore more and to add this tool in my skill set.
 
-## Development server
+## Tech Stack
+- Angular
+- RxJS
+- Motion
+- TailwindCSS
+  
+## Pages
 
-To start a local development server, run:
+**Login**
 
-```bash
-ng serve
-```
+<img width="1467" height="745" alt="Screenshot 2026-06-24 at 2 44 17 AM" src="https://github.com/user-attachments/assets/1e48d410-9e2e-45ac-a348-51a96b8b26da" />
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+**Cart**
 
-## Code scaffolding
+<img width="1450" height="746" alt="Screenshot 2026-06-22 at 11 55 49 PM" src="https://github.com/user-attachments/assets/805dcf80-007a-4079-956b-db920628c71a" />
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+**Products**
 
-```bash
-ng generate component component-name
-```
+<img width="1452" height="746" alt="Screenshot 2026-06-22 at 11 54 13 PM" src="https://github.com/user-attachments/assets/2744ba99-5169-4222-86d0-4621db27a4f0" />
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+**Product**
 
-```bash
-ng generate --help
-```
+<img width="1466" height="743" alt="Screenshot 2026-06-24 at 2 56 52 AM" src="https://github.com/user-attachments/assets/8a872e3d-ec19-4da4-904e-05840be8dd4c" />
 
-## Building
+**Checkout**
 
-To build the project run:
+<img width="1453" height="746" alt="Screenshot 2026-06-22 at 11 56 02 PM" src="https://github.com/user-attachments/assets/0903db85-2979-496c-9842-22e181532774" />
 
-```bash
-ng build
-```
+---
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+**Developed by: Adrian**
