@@ -9,21 +9,22 @@ import { Signin } from './signin/signin';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'signin' },
-  { path: 'signin', component: Signin, canActivate: [publicGuard] }, // no header
+  { path: 'signin', component: Signin, canActivate: [publicGuard], title: 'Shopping | Sign In' }, // no header
 
   {
     path: '',
     component: ProtectedLayout, // header lives here
     children: [
-      { path: 'products', component: Home },
-      { path: 'cart', component: Cart },
-      { path: 'checkout', component: Checkout },
+      { path: 'products', component: Home, title: 'Shopping | Products' },
+      { path: 'cart', component: Cart, title: 'Shopping | My Cart' },
+      { path: 'checkout', component: Checkout, title: 'Shopping | Checkout' },
       {
         path: 'products/:id',
         pathMatch: 'full',
         loadComponent: () => {
           return import('./product/product').then((m) => m.Product);
         },
+        title: 'Shopping | Product',
       },
     ],
     canActivate: [authGuard],
