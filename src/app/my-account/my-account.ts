@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Modal } from '../services/modal';
 
 @Component({
   selector: 'app-my-account',
@@ -79,6 +80,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 })
 export class MyAccount {
   private formBuilder = inject(FormBuilder);
+  modalSerivce = inject(Modal);
 
   profileForm = this.formBuilder.group({
     username: [''],
@@ -105,5 +107,8 @@ export class MyAccount {
   handleSubmit() {
     const values = this.profileForm.getRawValue();
     localStorage.setItem('profile', JSON.stringify(values));
+
+    this.modalSerivce.infoMessage.set('Profile successfully saved!');
+    this.modalSerivce.showInfoModal.set(true);
   }
 }
