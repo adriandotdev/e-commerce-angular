@@ -3,7 +3,9 @@ import { Cart } from './cart/cart';
 import { Checkout } from './checkout/checkout';
 import { authGuard } from './guards/auth-guard';
 import { publicGuard } from './guards/public-guard';
+import { ProfileLayout } from './layouts/profile-layout/profile-layout';
 import { ProtectedLayout } from './layouts/protected-layout/protected-layout';
+import { MyAccount } from './my-account/my-account';
 import { Home } from './products/products';
 import { Signin } from './signin/signin';
 
@@ -25,6 +27,17 @@ export const routes: Routes = [
           return import('./product/product').then((m) => m.Product);
         },
         title: 'Shopping | Product',
+      },
+      {
+        path: 'user',
+        component: ProfileLayout,
+        children: [
+          {
+            path: 'account/profile',
+            component: MyAccount,
+            title: 'Shopping | Profile',
+          },
+        ],
       },
     ],
     canActivate: [authGuard],

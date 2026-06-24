@@ -75,7 +75,12 @@ import { CartService } from '../../services/cart';
                     class="absolute right-1 -top-1.5  h-3 w-3 rotate-45 bg-white border-l border-t border-gray-300/20"
                   ></div>
                   <ul class="flex flex-col gap-3">
-                    <li class="cursor-pointer hover:text-orange-600">My Account</li>
+                    <li
+                      routerLink="/user/account/profile"
+                      class="cursor-pointer hover:text-orange-600"
+                    >
+                      My Account
+                    </li>
                     <li class="cursor-pointer hover:text-orange-600">My Purchase</li>
                     <li (click)="logout()" class="cursor-pointer hover:text-orange-600">Logout</li>
                   </ul>
